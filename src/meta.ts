@@ -92,17 +92,22 @@ export class Meta {
       return [];
     }
 
+    let suffix = this.context.suffix === '' ? '' : `-${this.context.suffix}`;
+
     let tags: Array<string> = [];
     for (const image of this.inputs.images) {
-      tags.push(`${image}:${version.main}`);
+      tags.push(`${image}:${version.main}${suffix}`);
       for (const partial of version.partial) {
-        tags.push(`${image}:${partial}`);
+        tags.push(`${image}:${partial}${suffix}`);
+      }
+      if (suffix !== '') {
+        tags.push(`${image}:${this.context.suffix}`);
       }
       if (version.latest) {
         tags.push(`${image}:latest`);
       }
       if (this.context.sha && this.inputs.tagSha) {
-        tags.push(`${image}:sha-${this.context.sha.substr(0, 7)}`);
+        tags.push(`${image}:sha-${this.context.sha.substr(0, 7)}${suffix}`);
       }
     }
     return tags;
