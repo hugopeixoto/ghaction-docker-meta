@@ -92,17 +92,25 @@ export class Meta {
       return [];
     }
 
+    let hasFlavor = this.inputs.flavor !== '';
+    let flavor = this.inputs.flavor;
+    let main = !hasFlavor || this.inputs.mainFlavor;
+
     let tags: Array<string> = [];
     for (const image of this.inputs.images) {
-      tags.push(`${image}:${version.main}`);
+      if (main) tags.push(`${image}:${version.main}`);
+      if (hasFlavor) tags.push(`${image}:${version.main}-${flavor}`);
       for (const partial of version.partial) {
-        tags.push(`${image}:${partial}`);
+        if (main) tags.push(`${image}:${partial}`);
+        if (hasFlavor) tags.push(`${image}:${partial}-${flavor}`);
       }
       if (version.latest) {
-        tags.push(`${image}:latest`);
+        if (main) tags.push(`${image}:latest`);
+        if (hasFlavor) tags.push(`${image}:${flavor}`);
       }
       if (this.context.sha && this.inputs.tagSha) {
-        tags.push(`${image}:sha-${this.context.sha.substr(0, 7)}`);
+        if (main) tags.push(`${image}:sha-${this.context.sha.substr(0, 7)}`);
+        if (hasFlavor) tags.push(`${image}:sha-${this.context.sha.substr(0, 7)}-${flavor}`);
       }
     }
     return tags;

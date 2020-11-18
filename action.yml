@@ -49,6 +49,12 @@ inputs:
     description: 'GitHub Token as provided by secrets'
     default: ${{ github.token }}
     required: true
+  flavor:
+    description: 'Container flavor, with no leading dash, like "alpine" or "debian"'
+    required: false
+  main-flavor:
+    description: 'Create tags without flavor as well'
+    required: false
 
 outputs:
   version:
